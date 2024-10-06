@@ -1,7 +1,9 @@
 package com.project.uRide.strategies;
 
 import com.project.uRide.dtos.RideRequestDTO;
+import com.project.uRide.entities.RideRequest;
 
 public interface RideFareCalculationStrategy {
-    double calculateFare(RideRequestDTO rideRequestDTO);
+    double RIDE_FARE_MULTIPLIER = 10;
+    double calculateFare(RideRequest rideRequest);
 }
