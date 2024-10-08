@@ -1,6 +1,5 @@
 package com.project.uRide.strategies.impl;
 
-import com.project.uRide.dtos.RideRequestDTO;
 import com.project.uRide.entities.RideRequest;
 import com.project.uRide.services.DistanceService;
 import com.project.uRide.strategies.RideFareCalculationStrategy;

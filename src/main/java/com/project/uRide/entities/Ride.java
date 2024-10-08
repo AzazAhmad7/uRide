@@ -1,14 +1,12 @@
 package com.project.uRide.entities;
 
 import com.project.uRide.entities.enums.PaymentMethod;
-import com.project.uRide.entities.enums.RideRequestStatus;
 import com.project.uRide.entities.enums.RideStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.locationtech.jts.geom.Point;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +16,7 @@ import java.time.LocalDateTime;
 public class Ride {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Driver driver;
@@ -38,6 +36,8 @@ public class Ride {
     private PaymentMethod paymentMethod;
     @Enumerated(EnumType.STRING)
     private RideStatus rideStatus;
+
+    private String otp;
 
     private Double fare;
     private LocalDateTime startedAt;

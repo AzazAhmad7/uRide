@@ -3,7 +3,6 @@ package com.project.uRide.entities;
 import com.project.uRide.entities.enums.TransactionMethod;
 import com.project.uRide.entities.enums.TransactionType;
 import jakarta.persistence.*;
-import jdk.jfr.Enabled;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;

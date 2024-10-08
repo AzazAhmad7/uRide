@@ -1,21 +1,22 @@
 package com.project.uRide.dtos;
 
-import com.project.uRide.entities.Driver;
-import com.project.uRide.entities.Rider;
 import com.project.uRide.entities.enums.PaymentMethod;
 import com.project.uRide.entities.enums.RideStatus;
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.locationtech.jts.geom.Point;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RideDTO {
     private long id;
     private DriverDTO driver;
     private RiderDTO rider;
-    private Point pickUpLocation;
-    private Point dropOffLocation;
+    private PointDTO pickUpLocation;
+    private PointDTO dropOffLocation;
     private LocalDateTime createdTime;
     private PaymentMethod paymentMethod;
     private RideStatus rideStatus;

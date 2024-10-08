@@ -3,7 +3,6 @@ package com.project.uRide.services.Impl;
 import com.project.uRide.dtos.DriverDTO;
 import com.project.uRide.dtos.SignUpDTO;
 import com.project.uRide.dtos.UserDTO;
-import com.project.uRide.entities.Rider;
 import com.project.uRide.entities.User;
 import com.project.uRide.entities.enums.Role;
 import com.project.uRide.exceptions.RuntimeConflictException;

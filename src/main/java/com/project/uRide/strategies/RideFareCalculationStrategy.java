@@ -1,6 +1,5 @@
 package com.project.uRide.strategies;
 
-import com.project.uRide.dtos.RideRequestDTO;
 import com.project.uRide.entities.RideRequest;
 
 public interface RideFareCalculationStrategy {

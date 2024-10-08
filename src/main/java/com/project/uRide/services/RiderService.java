@@ -5,9 +5,6 @@ import com.project.uRide.dtos.RideRequestDTO;
 import com.project.uRide.dtos.RiderDTO;
 import com.project.uRide.entities.Rider;
 import com.project.uRide.entities.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -18,4 +15,5 @@ public interface RiderService {
     RiderDTO getMyProfile();
     List<RideDTO> getAllRides();
     Rider createNewRider(User user);
+    Rider getCurrentRider();
 }

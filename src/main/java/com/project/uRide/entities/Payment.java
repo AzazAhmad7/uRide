@@ -1,7 +1,6 @@
 package com.project.uRide.entities;
 
 import com.project.uRide.entities.enums.PaymentMethod;
-import com.project.uRide.entities.enums.PaymentStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
