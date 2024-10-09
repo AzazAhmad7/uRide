@@ -4,6 +4,8 @@ import com.project.uRide.dtos.DriverDTO;
 import com.project.uRide.dtos.RideDTO;
 import com.project.uRide.dtos.RiderDTO;
 import com.project.uRide.entities.Driver;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -14,6 +16,8 @@ public interface DriverService {
     RideDTO endRide(Long rideId);
     RiderDTO rateRider(Long rideId, Integer rating);
     DriverDTO getMyProfile();
-    List<RideDTO> getAllRides();
+    Page<RideDTO> getAllRides(PageRequest pageRequest);
     Driver getCurrentDriver();
+
+    Driver updateDriverAvailability(Driver driver, boolean available);
 }

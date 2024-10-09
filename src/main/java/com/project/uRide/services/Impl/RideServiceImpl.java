@@ -4,6 +4,7 @@ import com.project.uRide.dtos.RideRequestDTO;
 import com.project.uRide.entities.Driver;
 import com.project.uRide.entities.Ride;
 import com.project.uRide.entities.RideRequest;
+import com.project.uRide.entities.Rider;
 import com.project.uRide.entities.enums.RideRequestStatus;
 import com.project.uRide.entities.enums.RideStatus;
 import com.project.uRide.exceptions.ResourceNotFoundException;
@@ -31,11 +32,6 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public void matchWithDrivers(RideRequestDTO rideRequestDTO) {
-
-    }
-
-    @Override
     public Ride createNewRide(RideRequest rideRequest, Driver driver) {
         rideRequest.setRideRequestStatus(RideRequestStatus.CONFIRMED);
 
@@ -58,13 +54,13 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Page<Ride> getAllRidesOfRider(Long riderId, PageRequest pageRequest) {
-        return null;
+    public Page<Ride> getAllRidesOfRider(Rider rider, PageRequest pageRequest) {
+        return rideRepository.findByRider(rider, pageRequest);
     }
 
     @Override
-    public Page<Ride> getAllRidesOfDriver(Long driverId, PageRequest pageRequest) {
-        return null;
+    public Page<Ride> getAllRidesOfDriver(Driver driver, PageRequest pageRequest) {
+        return rideRepository.findByDriver(driver, pageRequest);
     }
 
     private String generateRandomOTP(){
