@@ -6,13 +6,18 @@ import com.project.uRide.dtos.RiderDTO;
 import com.project.uRide.entities.Driver;
 import com.project.uRide.entities.Ride;
 import com.project.uRide.entities.RideRequest;
+import com.project.uRide.entities.Rider;
+import com.project.uRide.entities.enums.PaymentStatus;
 import com.project.uRide.entities.enums.RideRequestStatus;
 import com.project.uRide.entities.enums.RideStatus;
 import com.project.uRide.exceptions.ResourceNotFoundException;
 import com.project.uRide.repository.DriverRepository;
 import com.project.uRide.services.DriverService;
+import com.project.uRide.services.PaymentService;
 import com.project.uRide.services.RideRequestService;
 import com.project.uRide.services.RideService;
+import com.project.uRide.strategies.PaymentStrategyManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -33,6 +38,8 @@ public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final RideService rideService;
     private final ModelMapper modelMapper;
+    private final PaymentService paymentService;
+    private final PaymentStrategyManager paymentStrategyManager;
 
     @Override
     public RideDTO acceptRide(Long rideRequestId) {
@@ -78,12 +85,34 @@ public class DriverServiceImpl implements DriverService {
         }
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
+
+        paymentService.createPayment(savedRide);
+
         return modelMapper.map(savedRide, RideDTO.class);
     }
 
     @Override
+    @Transactional
     public RideDTO endRide(Long rideId) {
-        return null;
+
+        Ride ride = rideService.getRideById(rideId);
+        Driver currentDriver = getCurrentDriver();
+        if(ride == null){
+            throw new ResourceNotFoundException("Ride not found with id "+rideId);
+        }
+        if(!currentDriver.equals(ride.getDriver())){
+            throw new RuntimeException("Driver is not the same as current driver");
+        }
+        if(!ride.getRideStatus().equals(RideStatus.ONGOING)){
+            throw new RuntimeException("Cannot End Ride, status is "+ride.getRideStatus());
+        }
+
+        paymentService.processPayment(ride);
+        ride.setEndedAt(LocalDateTime.now());
+        Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ENDED);
+        updateDriverAvailability(currentDriver, true);
+
+        return modelMapper.map(savedRide, RideDTO.class);
     }
 
     @Override
