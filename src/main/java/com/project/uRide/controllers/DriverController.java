@@ -1,12 +1,14 @@
 package com.project.uRide.controllers;
 
-import com.project.uRide.dtos.RideDTO;
-import com.project.uRide.dtos.RideStartDTO;
+import com.project.uRide.dtos.*;
 import com.project.uRide.entities.Ride;
 import com.project.uRide.services.DriverService;
 import com.project.uRide.services.RideService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +36,28 @@ public class DriverController {
     public ResponseEntity<RideDTO> endRide(@PathVariable Long rideId) {
         RideDTO rideDTO = driverService.endRide(rideId);
         return ResponseEntity.ok(rideDTO);
+    }
+
+    @PostMapping("/cancelRide/{rideId}")
+    public ResponseEntity<RideDTO> cancelRide(@PathVariable Long rideId) {
+        return ResponseEntity.ok(driverService.cancelRide(rideId));
+    }
+
+    @PostMapping("/rateRider")
+    public ResponseEntity<RiderDTO> rateRider(@RequestBody RatingDTO ratingDTO){
+        return ResponseEntity.ok(driverService.rateRider(ratingDTO.getRideId(), ratingDTO.getRating()));
+    }
+
+    @GetMapping("/getProfile")
+    public ResponseEntity<DriverDTO> getMyProfile(){
+        return ResponseEntity.ok(driverService.getMyProfile());
+    }
+
+    @GetMapping("/getAllRides")
+    public ResponseEntity<Page<RideDTO>> getAllMyRide(@RequestParam(defaultValue = "0", required = false) Integer pageOffSet,
+                                                     @RequestParam(defaultValue = "10", required = false) Integer pageSize){
+        PageRequest pageRequest = PageRequest.of(pageOffSet, pageSize, Sort.by(Sort.Direction.DESC, "createdTime"));
+        return ResponseEntity.ok(driverService.getAllRides(pageRequest));
     }
 
 }

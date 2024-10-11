@@ -1,5 +1,6 @@
 package com.project.uRide.services;
 
+import com.project.uRide.dtos.DriverDTO;
 import com.project.uRide.dtos.RideDTO;
 import com.project.uRide.dtos.RideRequestDTO;
 import com.project.uRide.dtos.RiderDTO;
@@ -13,7 +14,7 @@ import java.util.List;
 public interface RiderService {
     RideRequestDTO requestRide(RideRequestDTO rideRequestDTO);
     RideDTO cancelRide(Long rideId);
-    RideDTO rateDriver(Long rideId, Integer rating);
+    DriverDTO rateDriver(Long rideId, Integer rating);
     RiderDTO getMyProfile();
     Page<RideDTO> getAllRides(PageRequest pageRequest);
     Rider createNewRider(User user);

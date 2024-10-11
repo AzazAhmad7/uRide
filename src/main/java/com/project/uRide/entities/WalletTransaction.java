@@ -19,7 +19,11 @@ public class WalletTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double amount;
+
+    @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
+
+    @Enumerated(EnumType.STRING)
     private TransactionMethod transactionMethod;
 
     @ManyToOne

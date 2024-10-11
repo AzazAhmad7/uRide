@@ -1,5 +1,6 @@
 package com.project.uRide.services.Impl;
 
+import com.project.uRide.dtos.DriverDTO;
 import com.project.uRide.dtos.RideDTO;
 import com.project.uRide.dtos.RideRequestDTO;
 import com.project.uRide.dtos.RiderDTO;
@@ -57,7 +58,7 @@ public class RiderServiceImpl implements RiderService {
         Ride ride = rideService.getRideById(rideId);
         Rider currentRider = getCurrentRider();
 
-        if(!ride.equals(currentRider)){
+        if(!ride.getRider().equals(currentRider)){
             throw new ResourceNotFoundException("Rider does not belong to this ride");
         }
         if(ride.getRideStatus().equals(RideStatus.ONGOING)){
@@ -71,7 +72,7 @@ public class RiderServiceImpl implements RiderService {
     }
 
     @Override
-    public RideDTO rateDriver(Long rideId, Integer rating) {
+    public DriverDTO rateDriver(Long rideId, Integer rating) {
         return null;
     }
 

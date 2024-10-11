@@ -3,12 +3,15 @@ package com.project.uRide.services.Impl;
 import com.project.uRide.dtos.DriverDTO;
 import com.project.uRide.dtos.SignUpDTO;
 import com.project.uRide.dtos.UserDTO;
+import com.project.uRide.entities.Driver;
 import com.project.uRide.entities.User;
 import com.project.uRide.entities.Wallet;
 import com.project.uRide.entities.enums.Role;
+import com.project.uRide.exceptions.ResourceNotFoundException;
 import com.project.uRide.exceptions.RuntimeConflictException;
 import com.project.uRide.repository.UserRepository;
 import com.project.uRide.services.AuthService;
+import com.project.uRide.services.DriverService;
 import com.project.uRide.services.RiderService;
 import com.project.uRide.services.WalletService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+import static com.project.uRide.entities.enums.Role.DRIVER;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -24,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RiderService riderService;
     private final WalletService walletService;
+    private final DriverService driverService;
 
     @Override
     public String login(String email, String password) {
@@ -47,6 +53,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public DriverDTO onBoardDriver(Long userId) {
-        return null;
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id "+userId));
+        if(user.getRoles().contains(DRIVER)){
+            throw new RuntimeException("User with id "+userId+" is already a driver");
+        }
+        Driver newDriver = Driver.builder()
+                .user(user)
+                .rating(0.0)
+                .available(true)
+                .build();
+
+        user.getRoles().add(DRIVER);
+        userRepository.save(user);
+
+        return modelMapper.map(driverService.createNewDriver(newDriver), DriverDTO.class);
     }
 }
