@@ -11,6 +11,7 @@ import com.project.uRide.exceptions.ResourceNotFoundException;
 import com.project.uRide.repository.RideRequestRepository;
 import com.project.uRide.repository.RiderRepository;
 import com.project.uRide.services.DriverService;
+import com.project.uRide.services.RatingService;
 import com.project.uRide.services.RideService;
 import com.project.uRide.services.RiderService;
 import com.project.uRide.strategies.RideStrategyManager;
@@ -32,6 +33,7 @@ public class RiderServiceImpl implements RiderService {
     private final RiderRepository riderRepository;
     private final RideService rideService;
     private final DriverService driverService;
+    private final RatingService ratingService;
 
     @Override
     @Transactional
@@ -73,7 +75,15 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public DriverDTO rateDriver(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)){
+            throw new RuntimeException("Ride status is not ended, "+ride.getRideStatus());
+        }
+        Rider currentRider = getCurrentRider();
+        if(!ride.getRider().equals(currentRider)){
+            throw new ResourceNotFoundException("Rider does not belong to this ride");
+        }
+        return ratingService.rateDriver(ride, rating);
     }
 
     @Override

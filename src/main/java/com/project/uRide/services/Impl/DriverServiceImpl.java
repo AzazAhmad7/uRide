@@ -12,10 +12,8 @@ import com.project.uRide.entities.enums.RideRequestStatus;
 import com.project.uRide.entities.enums.RideStatus;
 import com.project.uRide.exceptions.ResourceNotFoundException;
 import com.project.uRide.repository.DriverRepository;
-import com.project.uRide.services.DriverService;
-import com.project.uRide.services.PaymentService;
-import com.project.uRide.services.RideRequestService;
-import com.project.uRide.services.RideService;
+import com.project.uRide.repository.RatingRepository;
+import com.project.uRide.services.*;
 import com.project.uRide.strategies.PaymentStrategyManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +38,8 @@ public class DriverServiceImpl implements DriverService {
     private final ModelMapper modelMapper;
     private final PaymentService paymentService;
     private final PaymentStrategyManager paymentStrategyManager;
+    private final RatingService ratingService;
+    private final RatingRepository ratingRepository;
 
     @Override
     public RideDTO acceptRide(Long rideRequestId) {
@@ -87,6 +87,7 @@ public class DriverServiceImpl implements DriverService {
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
 
         paymentService.createPayment(savedRide);
+        ratingService.createNewRating(savedRide);
 
         return modelMapper.map(savedRide, RideDTO.class);
     }
@@ -117,7 +118,15 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public RiderDTO rateRider(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        if(!ride.getRideStatus().equals(RideStatus.ENDED)){
+            throw new RuntimeException("Ride status is not ENDED, status is "+ride.getRideStatus());
+        }
+        Driver currentDriver = getCurrentDriver();
+        if(!currentDriver.equals(ride.getDriver())){
+            throw new RuntimeException("Driver does not own this ride");
+        }
+        return ratingService.rateRider(ride, rating);
     }
 
     @Override
