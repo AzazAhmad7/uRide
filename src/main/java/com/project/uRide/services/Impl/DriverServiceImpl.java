@@ -3,10 +3,7 @@ package com.project.uRide.services.Impl;
 import com.project.uRide.dtos.DriverDTO;
 import com.project.uRide.dtos.RideDTO;
 import com.project.uRide.dtos.RiderDTO;
-import com.project.uRide.entities.Driver;
-import com.project.uRide.entities.Ride;
-import com.project.uRide.entities.RideRequest;
-import com.project.uRide.entities.Rider;
+import com.project.uRide.entities.*;
 import com.project.uRide.entities.enums.PaymentStatus;
 import com.project.uRide.entities.enums.RideRequestStatus;
 import com.project.uRide.entities.enums.RideStatus;
@@ -21,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -145,9 +143,9 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver getCurrentDriver() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        //TODO USE SPRING SECURITY TO GET CURRENT DRIVER
-        return driverRepository.findById(2L).orElseThrow(()-> new ResourceNotFoundException("Driver not found with id "+2));
+        return driverRepository.findByUser(user).orElseThrow(()-> new ResourceNotFoundException("Driver is not associated with user id "+user.getUserId()));
     }
 
     @Override
