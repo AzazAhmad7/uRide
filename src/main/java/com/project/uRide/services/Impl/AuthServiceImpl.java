@@ -59,6 +59,7 @@ public class AuthServiceImpl implements AuthService {
         User user = modelMapper.map(signUpDTO, User.class);
         user.setRoles(Set.of(Role.RIDER));
 
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         User savedUser = userRepository.save(user);
