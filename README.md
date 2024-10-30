@@ -1,64 +1,82 @@
 # uRide - Online Cab Booking Application Backend
 
-uRide is an online cab booking backend system built using Spring Boot, providing essential functionalities for both riders and drivers. It handles authentication, ride management, and payment processing, with features like driver discovery strategies, fare calculation strategies, and distance computation using the OSRM API.
+uRide is an online cab booking backend system built using Spring Boot, offering essential functionalities for both riders and drivers. It implements JWT-based authentication and authorization, ride management, and payment processing, with features like driver discovery strategies, fare calculation strategies, and distance computation using the OSRM API.
 
 ## Features
 
 ### Core Technologies:
 - **Spring Boot**: For creating a scalable and production-ready application.
-- **Spring Security**: For authentication and authorization.
+- **Spring Security with JWT**: For authentication and authorization using JSON Web Tokens.
 - **Spring Data JPA**: For database operations.
 - **PostgreSQL**: As the relational database.
 
 ### Functionality Overview:
 
 #### Authentication & Authorization
-- Implemented using **Spring Security** to ensure secure login and access control.
+- Implemented using **JWT (JSON Web Token)** with **Spring Security** to secure API endpoints.
+- Users authenticate with a email and password, receiving a JWT token for subsequent requests.
+- Authorization checks are performed based on the roles embedded in the JWT token.
 
 #### Distance Calculation
-- Calculated the distance between the pickup and dropoff locations using the **OSRM API**.
+- The distance between pickup and dropoff locations is calculated using the **OSRM API**.
 
 ### Driver Features:
 - **Accept Ride**: Accept a ride request from a rider.
 - **Cancel Ride**: Cancel an accepted ride.
 - **Start Ride**: Start a ride after OTP verification.
-- **End Ride**: End the ride and complete the journey.
-- **Rate Rider**: Provide a rating for the rider after the ride is completed.
+- **End Ride**: Complete the ride.
+- **Rate Rider**: Provide a rating for the rider after the ride.
 
 ### Rider Features:
-- **Request Ride**: Request a ride with specified pickup and dropoff locations.
-- **Cancel Ride**: Cancel a ride request before it's started.
+- **Request Ride**: Request a ride by specifying pickup and dropoff locations.
+- **Cancel Ride**: Cancel a ride request before it’s accepted.
 - **Rate Driver**: Rate the driver after completing a ride.
 
 ### OTP Verification
-- An OTP-based verification system to ensure that the ride starts securely.
+- An OTP-based system ensures that a ride can only start after correct verification.
 
 ### Driver Finding Strategies
-- **Top Rated Drivers**: Assigns rides to drivers based on their ratings.
+- **Top Rated Drivers**: Prioritizes assigning rides to drivers based on their ratings.
 - **Nearest Drivers**: Assigns rides to the nearest available drivers.
 
 ### Fare Calculation Strategies
-- **Default Fare Calculation**: Based on the distance between pickup and dropoff locations.
-- **Surge Pricing**: Dynamically adjusts fare based on selected conditions such as peak hours or high demand.
+- **Default Fare Calculation**: Based on the distance between pickup and dropoff points.
+- **Surge Pricing**: Dynamic pricing based on conditions such as high demand or peak hours.
 
 ### Payment Options
 - **Wallet Payment**: Riders can pay using their in-app wallet.
-- **Cash Payment**: Riders can choose to pay in cash at the end of the ride.
+- **Cash Payment**: Riders can choose to pay in cash after the ride.
 
 ### API Documentation & Monitoring
-- **Swagger UI**: Provides a user-friendly interface for testing and exploring the API.
+- **Swagger UI**: Provides an interface for testing and exploring the API.
 - **Spring Boot Actuators**: Offers production-ready monitoring and management capabilities.
+
+## JWT Implementation
+
+The application uses JWT for authentication and authorization:
+
+1. **User Authentication**:
+   - Users log in with their credentials and receive a JWT token upon successful authentication.
+   
+2. **Token Storage**:
+   - The client stores the JWT token (e.g., in cookies).
+   
+3. **Securing Endpoints**:
+   - Each request to a secured endpoint must include the JWT token in the `Authorization` header (`Bearer <token>`).
+   - The backend verifies the token’s validity and extracts user details for authorization.
+
+4. **Authorization**:
+   - Roles and permissions embedded in the JWT token are checked during every request.
 
 ## Project Structure
 
-- `advices`: Exception handling and advice controllers.
-- `configs`: Configuration files for Spring Security, database connections, etc.
+- `advices`: Handles global exception management and advice controllers.
+- `configs`: Contains configuration files for Spring Security, JWT settings, and other app-related configurations.
 - `controllers`: Handles incoming HTTP requests and defines API endpoints.
 - `dtos`: Data Transfer Objects for transferring data between layers.
-- `entities`: The core database entities (Driver, Rider, Ride, etc.).
+- `entities`: The core database entities, such as Driver, Rider, and Ride.
 - `exceptions`: Custom exceptions for handling errors.
-- `repositories`: Interfaces for accessing the database using Spring Data JPA.
-- `services`: Business logic implementation for various features like ride handling, fare calculation, etc.
-- `strategies`: Contains algorithms for driver finding and fare calculation strategies.
+- `repositories`: Interfaces for database access using Spring Data JPA.
+- `services`: Contains business logic implementations, such as ride handling, fare calculation, etc.
+- `strategies`: Driver and fare calculation strategies (top-rated, nearest driver, default fare, surge pricing).
 - `utils`: Utility classes for common functionalities across the application.
-
